@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name = "omnievent-api"
   spec.version = OmniEvent::API::VERSION
   spec.authors = ["Angus McLeod"]
-  spec.email = ["angus@pavilion.tech"]
+  spec.email = ["development@pavilion.tech"]
 
   spec.summary = "OmniEvent API strategy"
   spec.description = "A generic API strategy for OmniEvent"
