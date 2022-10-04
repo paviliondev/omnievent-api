@@ -19,6 +19,7 @@ module OmniEvent
 
       option :name, "api"
       option :token, ""
+      option :debug, false
 
       REDIRECT_LIMIT = 5
 
@@ -38,17 +39,13 @@ module OmniEvent
         raise NotImplementedError
       end
 
-      def request_path
-        raise NotImplementedError
-      end
-
       def request_headers
         raise NotImplementedError
       end
 
       def perform_request(opts = {})
-        request_opts = { path: request_path }.merge(opts)
-        request_response = request_connection.get(request_opts)
+        request_opts = { method: "GET" }.merge(opts)
+        request_response = request_connection.request(request_opts)
 
         redirect = 0
         while redirect < REDIRECT_LIMIT && [301, 302, 303, 307, 308].include?(request_response.status)
@@ -57,26 +54,32 @@ module OmniEvent
           request_response = request_connection.get(request_opts)
         end
 
-        request_error unless request_response.status == 200
+        unless request_response.status == 200
+          message = "Failed to retrieve events from #{options.name}"
+          message += ": #{request_response.body[0...300]}" if request_response.body
+          log(:error, message)
+        end
 
-        begin
-          JSON.parse(request_response.body)
-        rescue JSON::ParserError
-          request_error
+        if opts[:raw_response]
+          request_response
+        else
+          begin
+            parsed_request_body = JSON.parse(request_response.body)
+          rescue JSON::ParserError
+            log(:error, "Failed to parse response body from #{options.name}")
+            parsed_request_body = nil
+          end
+
+          parsed_request_body
         end
       end
 
       def request_connection
         @request_connection ||= Excon.new(
           request_url,
-          headers: request_headers
+          headers: request_headers,
+          debug: options.debug
         )
-      end
-
-      def request_error
-        message = "Failed to retrieve events from #{options.name}"
-        log(:error, message)
-        raise Error, message
       end
     end
   end
