@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    omnievent-api (0.1.0.pre1)
+    omnievent-api (0.1.0.pre2)
       excon
       omnievent
 
@@ -16,7 +16,7 @@ GEM
     crack (0.4.5)
       rexml
     diff-lcs (1.5.0)
-    excon (0.92.5)
+    excon (0.93.0)
     hashdiff (1.0.1)
     hashie (5.0.0)
     iso-639 (0.3.5)
