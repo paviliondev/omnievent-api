@@ -1,10 +1,10 @@
 # OmniEvent API (Pre Release)
 
+> Please note that this gem is pre release and is not yet ready for production.
+
 This gem contains an generic API strategy for OmniEvent.
 
 ## Usage
-
-> Please note that this gem is pre release and is not yet ready for production.
 
 This gem is designed to be a base for other OmniEvent strategies.
 
